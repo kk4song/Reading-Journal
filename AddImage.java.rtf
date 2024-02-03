@@ -1,0 +1,114 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Oblique;}
+{\colortbl;\red255\green255\blue255;\red195\green123\blue90;\red23\green23\blue26;\red174\green176\blue183;
+\red185\green101\blue173;\red71\green149\blue242;\red89\green158\blue96;\red38\green157\blue169;\red103\green107\blue114;
+\red164\green160\blue78;}
+{\*\expandedcolortbl;;\csgenericrgb\c76471\c48235\c35294;\csgenericrgb\c9020\c9020\c10196;\csgenericrgb\c68235\c69020\c71765;
+\csgenericrgb\c72549\c39608\c67843;\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c34902\c61961\c37647;\csgenericrgb\c14902\c61569\c66275;\csgenericrgb\c40392\c41961\c44706;
+\csgenericrgb\c64314\c62745\c30588;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 import \cf4 javax.swing.*;\
+\cf2 import \cf4 java.awt.*;\
+\cf2 import \cf4 java.awt.event.ActionEvent;\
+\cf2 import \cf4 java.awt.event.ActionListener;\
+\cf2 import \cf4 javax.swing.filechooser.FileNameExtensionFilter;\
+\
+\cf2 public class \cf4 AddImage \cf2 extends \cf4 JFrame\
+\{\
+    JLabel \cf5 imageLabel\cf4 ;\
+    JButton \cf5 browseButton\cf4 ;\
+    JPanel \cf5 center \cf4 = \cf2 new \cf4 JPanel();\
+    JPanel \cf5 bottom \cf4 = \cf2 new \cf4 JPanel();\
+    JButton \cf5 addImage \cf4 = \cf2 new \cf4 JButton();\
+    String \cf5 selectedImagePath\cf4 ;\
+    ImageIcon \cf5 imageIcon\cf4 ;\
+    Image \cf5 image\cf4 ;\
+    \cf2 public \cf6 AddImage\cf4 (String title, String author, \cf2 int \cf4 rating, \cf2 int \cf4 pages, String thoughts)\
+    \{\
+        \cf2 super\cf4 (\cf7 "Add Image Of Book"\cf4 );\
+        setSize(\cf8 600\cf4 , \cf8 500\cf4 );\
+        setLayout(\cf2 new \cf4 BorderLayout(\cf8 7\cf4 , \cf8 1\cf4 ));\
+        \cf2 this\cf4 .setLocationRelativeTo(\cf2 null\cf4 );\
+\
+        \cf5 imageLabel \cf4 = \cf2 new \cf4 JLabel(); \cf9 // Label to display image.\
+        \cf5 imageLabel\cf4 .setPreferredSize(\cf2 new \cf4 Dimension(\cf8 300\cf4 , \cf8 300\cf4 )); \cf9 // This will scale the image.\
+\
+        \cf5 browseButton \cf4 = \cf2 new \cf4 JButton(\cf7 "Browse your images"\cf4 ); \cf9 // Browse button.\
+        \cf4 setDefaultButton(\cf5 browseButton\cf4 );\
+        \cf5 browseButton\cf4 .addActionListener(\cf2 new \cf4 ActionListener() \{\
+            \cf10 @Override\
+            \cf2 public void \cf6 actionPerformed\cf4 (ActionEvent e) \{\
+                JFileChooser fileChooser = \cf2 new \cf4 JFileChooser(); \cf9 // JFileChooser to allow user to choose a file from their device.\
+                \cf4 FileNameExtensionFilter filter = \cf2 new \cf4 FileNameExtensionFilter(\cf7 "Image Files"\cf4 , \cf7 "jpg"\cf4 , \cf7 "jpeg"\cf4 , \cf7 "png"\cf4 , \cf7 "gif"\cf4 ); \cf9 // Filtering all valid types of files.\
+                \cf4 fileChooser.setFileFilter(filter);\
+\
+                \cf2 int \cf4 returnValue = fileChooser.showOpenDialog(\cf2 null\cf4 ); \cf9 // Getting the return value.\
+\
+                \cf2 if \cf4 (returnValue == JFileChooser.
+\f1\i \cf5 APPROVE_OPTION
+\f0\i0 \cf4 ) \{ \cf9 // If they choose a valid file.\
+                    \cf5 selectedImagePath \cf4 = fileChooser.getSelectedFile().getPath(); \cf9 // Obtain file path.\
+                    \cf5 imageIcon \cf4 = \cf2 new \cf4 ImageIcon(\cf5 selectedImagePath\cf4 );\
+                    \cf5 image \cf4 = \cf5 imageIcon\cf4 .getImage().getScaledInstance(\cf8 300\cf4 , \cf8 300\cf4 , Image.
+\f1\i \cf5 SCALE_SMOOTH
+\f0\i0 \cf4 ); \cf9 // Scaling the image.\
+                    \cf5 imageIcon \cf4 = \cf2 new \cf4 ImageIcon(\cf5 image\cf4 );\
+                    \cf5 imageLabel\cf4 .setIcon(\cf5 imageIcon\cf4 ); \cf9 // Adding the ImageIcon to the label.\
+                    //System.out.println(selectedImagePath);\
+                \cf4 \}\
+            \}\
+        \});\
+\
+        \cf5 center\cf4 .add(\cf5 imageLabel\cf4 ); \cf9 // Adding components.\
+        \cf5 center\cf4 .add(\cf5 browseButton\cf4 );\
+\
+        \cf5 bottom\cf4 .setBackground(Color.
+\f1\i \cf5 pink
+\f0\i0 \cf4 );\
+        setDefaultButton(\cf5 addImage\cf4 );\
+        \cf5 addImage\cf4 .setText(\cf7 "Add Image"\cf4 );\
+        \cf5 bottom\cf4 .add(\cf5 addImage\cf4 );\
+        \cf5 addImage\cf4 .addActionListener(\cf2 new \cf4 ActionListener() \{\
+            \cf10 @Override\
+            \cf2 public void \cf6 actionPerformed\cf4 (ActionEvent e) \{\
+                \cf2 if \cf4 (\cf5 selectedImagePath \cf4 != \cf2 null\cf4 ) \{ \cf9 // If there is a selected file path.\
+                    // Create Book object once we gather all the information.\
+                    \cf4 Book b1 = \cf2 new \cf4 Book(\cf5 title\cf4 , \cf5 author\cf4 , \cf5 pages\cf4 , \cf5 rating\cf4 , \cf5 thoughts\cf4 , \cf5 selectedImagePath\cf4 );\
+                    AddImage.\cf2 this\cf4 .dispose(); \cf9 // Close the window after selecting an image\
+                \cf4 \} \cf2 else \cf4 \{\
+                    JOptionPane.
+\f1\i showMessageDialog
+\f0\i0 (\cf2 null\cf4 , \cf7 "Please select an image by clicking the BROWSE button"\cf4 , \cf7 "Error"\cf4 , JOptionPane.
+\f1\i \cf5 ERROR_MESSAGE
+\f0\i0 \cf4 );\
+                \}\
+            \}\
+        \});\
+\
+        \cf2 this\cf4 .add(\cf5 center\cf4 , BorderLayout.
+\f1\i \cf5 CENTER
+\f0\i0 \cf4 );\
+        \cf2 this\cf4 .add(\cf5 bottom\cf4 , BorderLayout.
+\f1\i \cf5 SOUTH
+\f0\i0 \cf4 );\
+\
+        setVisible(\cf2 true\cf4 );\
+    \}\
+    \cf2 public void \cf6 setDefaultButton\cf4 (JButton button) \cf9 // Default button format.\
+    \cf4 \{\
+        button.setPreferredSize(\cf2 new \cf4 Dimension(\cf8 300\cf4 , \cf8 60\cf4 ));\
+        Font buttonFont = \cf2 new \cf4 Font(\cf7 "Serif"\cf4 , Font.
+\f1\i \cf5 BOLD
+\f0\i0 \cf4 , \cf8 25\cf4 );\
+        button.setFont(buttonFont);\
+        button.setBackground(Color.
+\f1\i \cf5 pink
+\f0\i0 \cf4 );\
+        button.setForeground(Color.
+\f1\i \cf5 gray
+\f0\i0 \cf4 );\
+    \}\
+\}\
+}

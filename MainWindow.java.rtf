@@ -1,0 +1,661 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Oblique;}
+{\colortbl;\red255\green255\blue255;\red195\green123\blue90;\red23\green23\blue26;\red174\green176\blue183;
+\red185\green101\blue173;\red103\green107\blue114;\red38\green157\blue169;\red71\green149\blue242;\red89\green158\blue96;
+\red31\green46\blue49;}
+{\*\expandedcolortbl;;\csgenericrgb\c76471\c48235\c35294;\csgenericrgb\c9020\c9020\c10196;\csgenericrgb\c68235\c69020\c71765;
+\csgenericrgb\c72549\c39608\c67843;\csgenericrgb\c40392\c41961\c44706;\csgenericrgb\c14902\c61569\c66275;\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c34902\c61961\c37647;
+\csgenericrgb\c12157\c18039\c19216;}
+\margl1440\margr1440\vieww28600\viewh15160\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 import \cf4 javax.swing.*;\
+\cf2 import \cf4 java.awt.*;\
+\cf2 import \cf4 java.awt.event.ActionEvent;\
+\cf2 import \cf4 java.awt.event.ActionListener;\
+\cf2 import \cf4 java.awt.event.MouseAdapter;\
+\cf2 import \cf4 java.awt.event.MouseEvent;\
+\cf2 import \cf4 java.io.*;\
+\cf2 import \cf4 java.awt.BorderLayout;\
+\cf2 import \cf4 java.awt.Color;\
+\cf2 import \cf4 javax.swing.ImageIcon;\
+\cf2 import \cf4 javax.swing.JFrame;\
+\cf2 import \cf4 javax.swing.JLabel;\
+\cf2 import \cf4 javax.swing.JPanel;\
+\cf2 import \cf4 java.awt.EventQueue;\
+\cf2 import \cf4 java.awt.GridLayout;\
+\cf2 import \cf4 javax.swing.*;\
+\cf2 import \cf4 java.awt.*;\
+\cf2 import \cf4 java.awt.event.*;\
+\cf2 import \cf4 java.util.ArrayList;\
+\
+\cf2 public class \cf4 MainWindow \cf2 extends \cf4 JFrame \{\
+    \cf2 private \cf4 DefaultListModel<String> \cf5 bookListModel\cf4 ; \cf6 // Display list model.\
+    \cf2 private \cf4 JList<String> \cf5 bookList\cf4 ;\
+    \cf2 private \cf4 JPanel \cf5 titlePanel\cf4 , \cf5 booksPanel\cf4 , \cf5 buttonPanel\cf4 , \cf5 bottomPanel\cf4 ; \cf6 // 4 panels.\
+    \cf2 private \cf4 JLabel \cf5 title\cf4 ; \cf6 // Small title.\
+    \cf2 private \cf4 JLabel \cf5 mainTitle\cf4 , \cf5 numBooks\cf4 , \cf5 numPages\cf4 ; \cf6 // Larger title + books & pages.\
+    \cf2 private \cf4 JButton \cf5 sortTitle\cf4 , \cf5 sortPages\cf4 , \cf5 sortRating\cf4 , \cf5 refresh\cf4 , \cf5 addBook\cf4 , \cf5 logOut\cf4 ; \cf6 // Different buttons\
+    \cf4 JScrollPane \cf5 scrollPane\cf4 ; \cf6 // Scroll pane for the JList.\
+    \cf2 int \cf5 count \cf4 = countLines(); \cf6 // Count how many lines there are initially.\
+    \cf2 int \cf5 pages \cf4 = \cf7 0\cf4 ; \cf6 // Total number of pages.\
+    \cf4 BookShelf \cf5 bookshelf\cf4 ;\
+    ArrayList<String> \cf5 bookTitles\cf4 ; \cf6 // ArrayList of all bookTitles to display.\
+\
+    \cf2 public \cf8 MainWindow\cf4 (String userID)\
+    \{\
+        \cf2 super\cf4 (\cf9 "The Little Library"\cf4 );\
+        setSize(\cf7 1650\cf4 , \cf7 1080\cf4 ); \cf6 // Full screen.\
+        \cf4 setDefaultCloseOperation(JFrame.
+\f1\i \cf5 EXIT_ON_CLOSE
+\f0\i0 \cf4 );\
+        setLayout(\cf2 new \cf4 BorderLayout()); \cf6 // Set as BorderLayout.\
+\
+        // Top panel.\
+        \cf5 titlePanel \cf4 = \cf2 new \cf4 JPanel();\
+        \cf5 titlePanel\cf4 .setBackground(Color.
+\f1\i \cf5 pink
+\f0\i0 \cf4 );\
+        \cf5 titlePanel\cf4 .setPreferredSize(\cf2 new \cf4 Dimension(\cf7 1650\cf4 , \cf7 200\cf4 ));\
+\
+        \cf6 // Top label creation.\
+        \cf5 title \cf4 = \cf2 new \cf4 JLabel();\
+        \cf5 title\cf4 .setText(\cf9 "The Little Library"\cf4 );\
+        Font initial = \cf2 new \cf4 Font(\cf9 "Serif"\cf4 , Font.
+\f1\i \cf5 PLAIN
+\f0\i0 \cf4 , \cf7 20\cf4 );\
+        ImageIcon bookshelf = \cf2 new \cf4 ImageIcon(\cf9 "MainWindow/pinkbook.jpeg"\cf4 );\
+        \cf6 // Scale image size.\
+        \cf4 Image scaleImage = bookshelf.getImage().getScaledInstance(\cf7 50\cf4 , \cf7 45\cf4 ,Image.
+\f1\i \cf5 SCALE_DEFAULT
+\f0\i0 \cf4 );\
+        bookshelf = \cf2 new \cf4 ImageIcon(scaleImage);\
+\
+        \cf6 // Fixing visuals of title label.\
+        \cf5 title\cf4 .setFont(initial);\
+        \cf5 title\cf4 .setIcon(bookshelf);\
+        title.setForeground(Color.white);\
+\
+        \cf6 // Larger title creation.\
+        \cf4 mainTitle = \cf2 new \cf4 JLabel();\
+        mainTitle.setText(\cf9 "       " \cf4 + userID + \cf9 "'s Reading Journal       "\cf4 ); \cf6 // Add space for formatting purposes.\
+        \cf4 Font main = \cf2 new \cf4 Font(\cf9 "Serif"\cf4 , Font.BOLD, \cf7 100\cf4 );\
+        mainTitle.setBounds(\cf7 100\cf4 , \cf7 100\cf4 , \cf7 70\cf4 , \cf7 70\cf4 );\
+        mainTitle.setFont(main);\
+        mainTitle.setForeground(Color.white);\
+\
+        \cf6 // Add both titles.\
+        \cf4 titlePanel.add(title, BorderLayout.NORTH);\
+        titlePanel.add(mainTitle, BorderLayout.NORTH);\
+\
+        \cf6 // Panel for JList of books.\
+        \cf4 booksPanel = \cf2 new \cf4 JPanel();\
+        booksPanel.setBackground(Color.white);\
+        booksPanel.setPreferredSize(\cf2 new \cf4 Dimension(\cf7 1000\cf4 , \cf7 680\cf4 ));\
+\
+        \cf6 // Create JList.\
+        \cf4 bookList = \cf2 new \cf4 JList<>();\
+        scrollPane = \cf2 new \cf4 JScrollPane();\
+\
+        \cf6 // Right side of panel.\
+        \cf4 buttonPanel = \cf2 new \cf4 JPanel();\
+        buttonPanel.setBackground(Color.white);\
+        buttonPanel.setPreferredSize(\cf2 new \cf4 Dimension(\cf7 650\cf4 , \cf7 680\cf4 ));\
+\
+        \cf6 // Create bottom panel.\
+        \cf4 bottomPanel = \cf2 new \cf4 JPanel();\
+        bottomPanel.setBackground(Color.pink);\
+        bottomPanel.setPreferredSize(\cf2 new \cf4 Dimension(\cf7 1650\cf4 , \cf7 200\cf4 ));\
+\
+        \cf6 // Adding top three panels.\
+        \cf2 this\cf4 .add(titlePanel, BorderLayout.NORTH);\
+        \cf2 this\cf4 .add(booksPanel, BorderLayout.CENTER);\
+        \cf2 this\cf4 .add(buttonPanel, BorderLayout.EAST);\
+        \cf6 //this.add(bottomPanel, BorderLayout.SOUTH);\
+\
+        // Add book JButton.\
+        \cf4 addBook = \cf2 new \cf4 JButton(\cf9 "Add Book"\cf4 );\
+        setDefaultButton(addBook);\
+        addBook.setPreferredSize(\cf2 new \cf4 Dimension (\cf7 275\cf4 , \cf7 60\cf4 ));\
+        addBook.addActionListener(\cf2 new \cf4 ActionListener() \{\
+            @Override\
+            \cf2 public void \cf4 actionPerformed(ActionEvent e) \{\
+                RatingWindow w1 = \cf2 new \cf4 RatingWindow(); \cf6 // RatingWindow object creation.\
+                \cf2 int \cf4 lines = countLines();\
+            \}\
+        \});\
+\
+        \cf6 // Create JList.\
+        \cf4 bookListModel = \cf2 new \cf4 DefaultListModel<>();\
+        bookList = \cf2 new \cf4 JList<>(bookListModel);\
+        scrollPane = \cf2 new \cf4 JScrollPane(bookList);\
+        showCatalog(); \cf6 // Displaying the book catalog (books already entered).\
+        \cf4 bookList.setFont(initial);\
+\
+        getContentPane().add(scrollPane); \cf6 // Adding scroll pane.\
+\
+        \cf4 bottomPanel.setLayout(\cf2 new \cf4 FlowLayout(FlowLayout.LEFT)); \cf6 // Setting bottomPanel layout.\
+        \cf4 JScrollPane pane = \cf2 new \cf4 JScrollPane(bottomPanel); \cf6 // Adding a scroll pane to bottomPanel.\
+\
+        // Adding both horizontal & vertical scrollbar.\
+        \cf4 pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);\
+        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);\
+        \cf2 this\cf4 .add(pane, BorderLayout.SOUTH); \cf6 // Adding bottom panel.\
+\
+        // Creating the ArrayList.\
+        \cf4 bookTitles = \cf2 new \cf4 ArrayList<>();\
+\
+        \cf6 // Adding the elements from the JList into the ArrayList.\
+        \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < bookListModel.getSize(); i++) \{\
+            String title = bookListModel.getElementAt(i).trim();\
+            bookTitles.add(title);\
+        \}\
+\
+        \cf6 // Creating the bookshelf in the bottom panel; adding the titles.\
+        \cf2 for \cf4 (String title : bookTitles) \{\
+            JPanel bookPanel = createBookPanel(title);\
+            bottomPanel.add(bookPanel);\
+        \}\
+\
+        \cf6 // Sort by Title button.\
+        \cf4 sortTitle = \cf2 new \cf4 JButton(\cf9 "Sort by Title"\cf4 );\
+        setDefaultButton(sortTitle);\
+        sortTitle.addActionListener(\cf2 new \cf4 ActionListener() \{\
+            @Override\
+            \cf2 public void \cf4 actionPerformed(ActionEvent e) \{\
+                String[] books = getArray(); \cf6 // Creating an array.\
+                \cf4 titleSort(books); \cf6 // Sorting the array.\
+                \cf4 bookListModel.removeAllElements(); \cf6 // Resetting/removing all JList elements.\
+\
+                \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < books.length; i++)\
+                \{\
+                    String temp = books[i];\
+                    String title = temp.substring(\cf7 0\cf4 , temp.indexOf(\cf9 ","\cf4 ));\
+                    bookListModel.addElement(\cf9 "      " \cf4 + title); \cf6 // Re-adding all the sorted elements.\
+                \cf4 \}\
+\
+            \}\
+        \});\
+\
+        \cf6 // Sort by Pages method.\
+        \cf4 sortPages = \cf2 new \cf4 JButton(\cf9 "Sort by Pages"\cf4 );\
+        setDefaultButton(sortPages);\
+        sortPages.addActionListener(\cf2 new \cf4 ActionListener() \{\
+            @Override\
+            \cf2 public void \cf4 actionPerformed(ActionEvent e) \{\
+                String[] books = getArray();\
+                numericalSort(books, \cf9 "pages"\cf4 ); \cf6 // Pass in "pages" to indicate sort by pages.\
+                \cf4 bookListModel.removeAllElements();\
+\
+                \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < books.length; i++)\
+                \{\
+                    String temp = books[i];\
+                    String title = temp.substring(\cf7 0\cf4 , temp.indexOf(\cf9 ","\cf4 ));\
+                    bookListModel.addElement(\cf9 "      " \cf4 + title);\
+                \}\
+            \}\
+        \});\
+\
+        \cf6 // MouseListener to detect double click on bookList.\
+        \cf4 bookList.addMouseListener(\cf2 new \cf4 java.awt.event.MouseAdapter () \{\
+            @Override\
+            \cf2 public void \cf4 mouseClicked(java.awt.event.MouseEvent evt) \{\
+                JList<String> list = (JList<String>) evt.getSource();\
+                \cf2 if \cf4 (evt.getClickCount() == \cf7 2\cf4 ) \{\
+                    \cf2 int \cf4 index = list.locationToIndex(evt.getPoint());\
+                    String selectedBook = list.getModel().getElementAt(index);\
+                    showData(selectedBook); \cf6 // Show rating for the selected book\
+                \cf4 \}\
+            \}\
+        \});\
+\
+        \cf6 // Sort by rating button.\
+        \cf4 sortRating = \cf2 new \cf4 JButton(\cf9 "Sort by Rating"\cf4 );\
+        setDefaultButton(sortRating);\
+        sortRating.addActionListener(\cf2 new \cf4 ActionListener() \{\
+            @Override\
+            \cf2 public void \cf4 actionPerformed(ActionEvent e) \{\
+                String[] books = getArray();\
+                numericalSort(books, \cf9 "rating"\cf4 ); \cf6 // Pass in "rating" to indicate sort by rating.\
+                \cf4 bookListModel.removeAllElements();\
+\
+                \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < books.length; i++)\
+                \{\
+                    String temp = books[i];\
+                    String title = temp.substring(\cf7 0\cf4 , temp.indexOf(\cf9 ","\cf4 ));\
+                    bookListModel.addElement(\cf9 "      " \cf4 + title);\
+                \}\
+            \}\
+        \});\
+\
+        \cf6 // Refresh Catalog button.\
+        \cf4 refresh = \cf2 new \cf4 JButton(\cf9 "Refresh Catalog"\cf4 );\
+        setDefaultButton(refresh);\
+        refresh.setPreferredSize(\cf2 new \cf4 Dimension(\cf7 275\cf4 , \cf7 60\cf4 ));\
+        refresh.addActionListener(\cf2 new \cf4 ActionListener() \{\
+            @Override\
+            \cf2 public void \cf4 actionPerformed(ActionEvent e) \{\
+                \cf2 int \cf4 lines = countLines();\
+\
+                \cf2 if \cf4 (lines != count) \{ \cf6 // Getting difference between original lines and new number of lines.\
+                    \cf2 int \cf4 difference = lines - count;\
+                    updateCatalog(difference); \cf6 // Update the catalog.\
+                    \cf4 count = lines; \cf6 // Updating the count.\
+                    \cf4 numBooks.setText(\cf9 "Total Number of Books Read: " \cf4 + count); \cf6 // Update number of books label.\
+                    \cf4 numPages.setText(\cf9 "     Total Number of Pages Read: " \cf4 + getPages() + \cf9 "     "\cf4 ); \cf6 // Update number of pages label.\
+                \cf4 \}\
+            \}\
+        \});\
+\
+        \cf6 // Log out button.\
+        \cf4 logOut = \cf2 new \cf4 JButton(\cf9 "Log Out"\cf4 );\
+        setDefaultButton(logOut);\
+        logOut.setPreferredSize(\cf2 new \cf4 Dimension(\cf7 350\cf4 , \cf7 60\cf4 ));\
+        logOut.addActionListener(\cf2 new \cf4 ActionListener() \{\
+            @Override\
+            \cf2 public void \cf4 actionPerformed(ActionEvent e) \{\
+                System.exit(\cf7 0\cf4 ); \cf6 // End program.\
+            \cf4 \}\
+        \});\
+\
+        \cf6 // Number of pages & number of books label.\
+        \cf4 pages = getPages();\
+        numBooks = \cf2 new \cf4 JLabel(\cf9 "Total Number of Books Read: " \cf4 + count);\
+        numPages = \cf2 new \cf4 JLabel(\cf9 "     Total Number of Pages Read: " \cf4 + pages + \cf9 "     "\cf4 );\
+        \cf6 // Additional labels for formatting reasons.\
+        \cf4 JLabel blank = \cf2 new \cf4 JLabel(\cf9 "---------------------------------"\cf4 );\
+        JLabel blank1 = \cf2 new \cf4 JLabel(\cf9 "------------------------------       --------------"\cf4 );\
+        JLabel blank2 = \cf2 new \cf4 JLabel(\cf9 "----------              -----------------------"\cf4 );\
+        JLabel blank3 = \cf2 new \cf4 JLabel(\cf9 "---------------------------------"\cf4 );\
+        blank.setForeground(Color.white);\
+        blank1.setForeground(Color.white);\
+        blank2.setForeground(Color.white);\
+        blank3.setForeground(Color.white);\
+\
+        \cf6 // Setting font, size, etc.\
+        \cf4 Font label = \cf2 new \cf4 Font(\cf9 "Serif"\cf4 , Font.BOLD, \cf7 30\cf4 );\
+        numPages.setFont(label);\
+        numBooks.setFont(label);\
+        numPages.setForeground(Color.gray);\
+        numBooks.setForeground(Color.gray);\
+\
+        \cf6 // Adding different components.\
+        \cf4 buttonPanel.add(sortTitle);\
+        buttonPanel.add(sortPages);\
+        buttonPanel.add(sortRating);\
+        buttonPanel.add(blank3);\
+        buttonPanel.add(numBooks);\
+        buttonPanel.add(blank);\
+        buttonPanel.add(numPages);\
+        buttonPanel.add(blank1);\
+        buttonPanel.add(refresh);\
+        buttonPanel.add(addBook);\
+        buttonPanel.add(blank2);\
+        buttonPanel.add(logOut);\
+\
+        setVisible(\cf2 true\cf4 );\
+\
+    \}\
+    \cf2 public void \cf4 setDefaultButton(JButton button) \cf6 // Default button for efficiency.\
+    \cf4 \{\
+        button.setPreferredSize(\cf2 new \cf4 Dimension(\cf7 200\cf4 , \cf7 60\cf4 ));\
+        Font buttonFont = \cf2 new \cf4 Font(\cf9 "Serif"\cf4 , Font.BOLD, \cf7 30\cf4 );\
+        button.setFont(buttonFont);\
+        button.setBackground(Color.pink);\
+        button.setOpaque(\cf2 true\cf4 );\
+        button.setForeground(Color.gray);\
+    \}\
+    \cf2 public void \cf4 showCatalog() \cf6 // Show JList catalog when program begins.\
+    \cf4 \{\
+        \cf2 try\
+        \cf4 \{\
+            \cf6 // Reading to program.\
+            \cf4 FileReader fr = \cf2 new \cf4 FileReader(\cf9 "BookData.txt"\cf4 );\
+            BufferedReader br = \cf2 new \cf4 BufferedReader(fr);\
+\
+            String temp;\
+\
+            \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < count; i++)\
+            \{\
+                temp = br.readLine();\
+\
+                String title = temp.substring(\cf7 0\cf4 , temp.indexOf(\cf9 ","\cf4 )); \cf6 // Only taking the title portion of the line.\
+                \cf4 bookListModel.addElement(\cf9 "      " \cf4 + title); \cf6 // Adding the spaces for formatting/aesthetic reasons.\
+            \cf4 \}\
+            fr.close();\
+            br.close();\
+\
+        \} \cf2 catch \cf4 (IOException e) \{\
+            \cf2 throw new \cf4 RuntimeException(e);\
+        \}\
+    \}\
+\
+    \cf2 public void \cf4 updateCatalog(\cf2 int \cf4 difference) \cf6 // Updating the catalog and bookshelf.\
+    \cf4 \{\
+        \cf6 //int counter = 0;\
+        \cf2 try\
+        \cf4 \{\
+            FileReader fr = \cf2 new \cf4 FileReader(\cf9 "BookData.txt"\cf4 );\
+            BufferedReader br = \cf2 new \cf4 BufferedReader(fr);\
+\
+            String temp;\
+\
+            \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < countLines() - difference; i++)\
+            \{\
+                temp = br.readLine(); \cf6 // Reading the lines that are already displayed.\
+            \cf4 \}\
+\
+            \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < difference; i++) \cf6 // Reading to the lines we need to add.\
+            \cf4 \{\
+                temp = br.readLine();\
+                String title = temp.substring(\cf7 0\cf4 , temp.indexOf(\cf9 ","\cf4 ));\
+                bookListModel.addElement(\cf9 "      " \cf4 + title); \cf6 // Adding the lines we don't have.\
+                \cf4 JPanel bookPanel = createBookPanel(title); \cf6 // Updating the bookshelf.\
+                \cf4 bottomPanel.add(bookPanel); \cf6 // Adding the panel to the bottom panel.\
+            \cf4 \}\
+            fr.close();\
+            br.close();\
+        \}\
+        \cf2 catch \cf4 (IOException e)\
+        \{\
+            System.out.println(e + \cf9 "ERROR occured"\cf4 );\
+            JOptionPane.showMessageDialog(\cf2 null\cf4 , \cf9 "Something went wrong. The program is going to end once you click the X"\cf4 );\
+            System.exit(\cf7 0\cf4 ); \cf6 // Ending the program if something goes wrong.\
+        \cf4 \}\
+    \}\
+    \cf2 public int \cf4 countLines() \cf6 // Count the number of lines.\
+    \cf4 \{\
+        \cf2 int \cf4 counter = \cf7 0\cf4 ;\
+        \cf2 try\
+        \cf4 \{\
+            FileReader fr = \cf2 new \cf4 FileReader(\cf9 "BookData.txt"\cf4 );\
+            BufferedReader br = \cf2 new \cf4 BufferedReader(fr);\
+\
+            String temp = br.readLine();\
+\
+            \cf2 while \cf4 (temp != \cf2 null\cf4 )\
+            \{\
+                \cf2 if \cf4 (!temp.trim().isEmpty()) \{ \cf6 // Make sure line isn't empty.\
+                    \cf4 counter++; \cf6 // Counting the lines.\
+                \cf4 \}\
+                temp = br.readLine();\
+            \}\
+\
+            fr.close();\
+            br.close();\
+        \}\
+        \cf2 catch \cf4 (IOException e)\
+        \{\
+            System.out.println(e + \cf9 "ERROR occured"\cf4 );\
+            JOptionPane.showMessageDialog(\cf2 null\cf4 , \cf9 "Something went wrong. The program is going to end once you click the X"\cf4 );\
+            System.exit(\cf7 0\cf4 );\
+        \}\
+        \cf2 return \cf4 counter; \cf6 // Return number of lines.\
+    \cf4 \}\
+    \cf2 public \cf4 String[] getArray()\
+    \{\
+        \cf2 int \cf4 counter = \cf7 0\cf4 ;\
+        String[] books;\
+        \cf2 try\
+        \cf4 \{\
+            FileReader fr = \cf2 new \cf4 FileReader(\cf9 "BookData.txt"\cf4 );\
+            BufferedReader br = \cf2 new \cf4 BufferedReader(fr);\
+\
+            br.mark(\cf7 1000\cf4 ); \cf6 // Book marking first line.\
+\
+            \cf4 String temp = br.readLine();\
+\
+            \cf2 while \cf4 (temp != \cf2 null\cf4 )\
+            \{\
+                counter++;\
+                temp = br.readLine();\
+            \}\
+            br.reset(); \cf6 // Going back to first line.\
+\
+            \cf4 books = \cf2 new \cf4 String[counter]; \cf6 // Setting the size of the array based off the amount of lines.\
+\
+            \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < counter; i++)\
+            \{\
+                temp = br.readLine();\
+                books[i] = temp; \cf6 // Setting each element of the array to a line.\
+            \cf4 \}\
+\
+            br.close();\
+            fr.close();\
+\
+            \cf2 return \cf4 books;\
+        \}\
+        \cf2 catch \cf4 (IOException e)\
+        \{\
+            System.out.println(e + \cf9 "ERROR occured"\cf4 );\
+            JOptionPane.showMessageDialog(\cf2 null\cf4 , \cf9 "Something went wrong. The program is going to end once you click the X"\cf4 );\
+            System.exit(\cf7 0\cf4 ); \cf6 // Ending program if error occurs.\
+        \cf4 \}\
+\
+        \cf2 return null\cf4 ; \cf6 // Returning nothing if something goes wrong.\
+    \cf4 \}\
+    \cf2 public \cf4 String[] titleSort(String[] arr) \cf6 // Sorting by title.\
+    \cf4 \{\
+        \cf6 // Sorting method: Selection Sort\
+        \cf2 int \cf4 indexOfMin;\
+        String temp;\
+        \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 0\cf4 ; i < arr.length - \cf7 1\cf4 ; i++) \{\
+            indexOfMin = i; \cf6 // Check with each index.\
+            \cf2 for \cf4 (\cf2 int \cf4 j = i + \cf7 1\cf4 ; j < arr.length; j++) \{\
+                \cf2 if \cf4 (arr[j].compareToIgnoreCase(arr[indexOfMin]) < \cf7 0\cf4 ) \cf6 // If another element is smaller.\
+                \cf4 \{\
+                    indexOfMin = j; \cf6 // Index of minimum changes.\
+                \cf4 \}\
+            \}\
+            temp = arr[i]; \cf6 // Temporary place-holder.\
+            \cf4 arr[i] = arr[indexOfMin];\
+            arr[indexOfMin] = temp;\
+        \}\
+        \cf2 return \cf4 arr;\
+    \}\
+\
+    \cf2 public \cf4 String[] numericalSort(String[] arr, String type) \cf6 // Pages and stars sort.\
+    \cf4 \{\
+        String temp;\
+        \cf2 int \cf4 num;\
+\
+        \cf2 if \cf4 (type.compareTo(\cf9 "pages"\cf4 ) == \cf7 0\cf4 ) \cf6 // Index we sort changes based off the pages or rating.\
+        \cf4 \{\
+            num = \cf7 2\cf4 ;\
+        \}\
+        \cf2 else\
+        \cf4 \{\
+            num = \cf7 3\cf4 ;\
+        \}\
+\
+        \cf2 for \cf4 (\cf2 int \cf4 i = \cf7 1\cf4 ; i < arr.length; i++)\
+        \{\
+            \cf2 for \cf4 (\cf2 int \cf4 j = i - \cf7 1\cf4 ; j >= \cf7 0\cf4 ; j--)\
+            \{\
+                \cf2 int \cf4 pagesOne = \cf7 0\cf4 ;\
+                \cf2 try \cf4 \{\
+                    String[] dataOne = arr[j + \cf7 1\cf4 ].split(\cf9 "\cb10 ,\cb3 "\cf4 );\
+                    dataOne[num] = dataOne[num].replaceAll(\cf9 "\cb10 ,\cb3 "\cf4 , \cf9 ""\cf4 );\
+                    dataOne[num] = dataOne[num].replaceAll(\cf9 "\cb10  \cb3 "\cf4 , \cf9 ""\cf4 );\
+                    pagesOne = Integer.parseInt(dataOne[num]);\
+                    \cf6 // Use 'pagesOne' as needed\
+                \cf4 \} \cf2 catch \cf4 (NumberFormatException e) \{\
+                    \cf6 // Handle the case where the string cannot be parsed as an integer\
+                    \cf4 System.out.println(\cf9 "Error parsing integer from string: " \cf4 + e.getMessage());\
+                    JOptionPane.showMessageDialog(\cf2 null\cf4 , \cf9 "Something went wrong. The program is going to end once you click the X"\cf4 );\
+                    System.exit(\cf7 0\cf4 ); \cf6 // End program if something occurs.\
+                \cf4 \}\
+\
+                \cf2 int \cf4 pagesTwo = \cf7 0\cf4 ;\
+                \cf2 try \cf4 \{\
+                    String[] dataTwo = arr[j].split(\cf9 "\cb10 ,\cb3 "\cf4 ); \cf6 // Split line of data into array.\
+                    \cf4 dataTwo[\cf7 3\cf4 ] = dataTwo[\cf7 3\cf4 ].replaceAll(\cf9 "\cb10 ,\cb3 "\cf4 , \cf9 ""\cf4 ); \cf6 // Take the third index.\
+                    \cf4 dataTwo[\cf7 3\cf4 ] = dataTwo[\cf7 3\cf4 ].replaceAll(\cf9 "\cb10  \cb3 "\cf4 , \cf9 ""\cf4 );\
+                    pagesTwo = Integer.parseInt(dataTwo[num]);\
+                \} \cf2 catch \cf4 (NumberFormatException e) \{\
+                    \cf6 // Handle the case where the string cannot be parsed as an integer.\
+                    \cf4 System.out.println(\cf9 "Error parsing integer from string: " \cf4 + e.getMessage());\
+                    JOptionPane.showMessageDialog(\cf2 null\cf4 , \cf9 "Something went wrong. The program is going to end once you click the X"\cf4 );\
+                    System.exit(\cf7 0\cf4 );\
+                \}\
+                \cf2 if \cf4 (pagesOne < pagesTwo) \cf6 // If the number in front is smaller than the one behind it.\
+                \cf4 \{\
+                    temp = arr[j + \cf7 1\cf4 ];\
+                    arr[j + \cf7 1\cf4 ] = arr[j];\
+                    arr[j] = temp;\
+                \}\
+                \cf2 else\
+                \cf4 \{\
+                    j = \cf7 0\cf4 ; \cf6 // Break out of for loop.\
+                \cf4 \}\
+            \}\
+        \}\
+        \cf2 return \cf4 arr;\
+        \}\
+\
+    \cf2 public void \cf4 showData(String title) \cf6 // Showing the data when a title is double clicked.\
+    \cf4 \{\
+        title = title.trim(); \cf6 // Trim each title to avoid errors.\
+        \cf4 String information = \cf9 ""\cf4 ;\
+        \cf2 try \cf4 \{\
+            FileReader fr = \cf2 new \cf4 FileReader(\cf9 "BookData.txt"\cf4 );\
+            BufferedReader br = \cf2 new \cf4 BufferedReader(fr);\
+\
+            String temp = br.readLine();\
+            \cf2 while \cf4 (temp != \cf2 null\cf4 )\
+            \{\
+                String tempTitle = temp.substring(\cf7 0\cf4 , temp.indexOf(\cf9 ","\cf4 )); \cf6 // Extract title from data.\
+                \cf2 if \cf4 (tempTitle.compareTo(title) == \cf7 0\cf4 ) \cf6 // Compare if it is equal.\
+                \cf4 \{\
+                    information = temp; \cf6 // If it is, break from the loop.\
+                    \cf2 break\cf4 ;\
+                \}\
+                \cf2 else\
+                \cf4 \{\
+                    temp = br.readLine();\
+                \}\
+            \}\
+        \}\
+        \cf2 catch \cf4 (IOException e)\
+        \{\
+            System.out.println(e);\
+        \}\
+\
+        String[] data = information.split(\cf9 "\cb10 ,\cb3 "\cf4 ); \cf6 // Splitting each part of data.\
+        \cf4 String dataTitle = data[\cf7 0\cf4 ];\
+        String dataAuthor = data[\cf7 1\cf4 ];\
+        String dataPage = data[\cf7 2\cf4 ];\
+        String dataStars = data[\cf7 3\cf4 ];\
+        String dataThoughts = data[\cf7 4\cf4 ];\
+        String dataImage = data[\cf7 5\cf4 ];\
+\
+        Font text = \cf2 new \cf4 Font(\cf9 "Serif"\cf4 , Font.PLAIN, \cf7 25\cf4 );\
+        \cf6 // Creating the frame we will open.\
+        \cf4 JFrame frame = \cf2 new \cf4 JFrame();\
+        frame.setSize(\cf7 600\cf4 , \cf7 800\cf4 );\
+        frame.setLayout(\cf2 new \cf4 GridLayout(\cf7 2\cf4 , \cf7 1\cf4 ));\
+        frame.setLocationRelativeTo(\cf2 null\cf4 );\
+\
+        \cf6 // Top panel will be the image of the book.\
+        \cf4 JPanel top = \cf2 new \cf4 JPanel();\
+        JLabel imageLabel = \cf2 new \cf4 JLabel();\
+        ImageIcon bookIcon = \cf2 new \cf4 ImageIcon(dataImage);\
+        Image scaleImage = bookIcon.getImage().getScaledInstance(\cf7 300\cf4 , \cf7 350\cf4 ,Image.SCALE_DEFAULT);\
+\
+        bookIcon = \cf2 new \cf4 ImageIcon(scaleImage);\
+        imageLabel.setIcon(bookIcon);\
+        top.add(imageLabel);\
+        top.setBackground(Color.pink);\
+\
+        \cf6 // Adding a Grid Layout within a Grid Layout (panel).\
+        \cf4 JPanel bottom = \cf2 new \cf4 JPanel(\cf2 new \cf4 GridLayout(\cf7 5\cf4 , \cf7 1\cf4 ));\
+        bottom.setBackground(Color.white);\
+\
+        \cf6 // Creating the label for each piece of information and adding it.\
+        \cf4 JLabel titleLabel = \cf2 new \cf4 JLabel(\cf9 "      Title: " \cf4 + dataTitle);\
+        titleLabel.setFont(text);\
+        titleLabel.setForeground(Color.gray);\
+        bottom.add(titleLabel);\
+\
+        JLabel authorLabel = \cf2 new \cf4 JLabel(\cf9 "      Author: " \cf4 + dataAuthor);\
+        authorLabel.setFont(text);\
+        authorLabel.setForeground(Color.gray);\
+        bottom.add(authorLabel);\
+\
+        JLabel pagesLabel = \cf2 new \cf4 JLabel(\cf9 "      Pages: " \cf4 + dataPage);\
+        pagesLabel.setFont(text);\
+        pagesLabel.setForeground(Color.gray);\
+        bottom.add(pagesLabel);\
+\
+        JLabel ratingLabel = \cf2 new \cf4 JLabel(\cf9 "      Rating: " \cf4 + dataStars + \cf9 " stars"\cf4 );\
+        ratingLabel.setFont(text);\
+        ratingLabel.setForeground(Color.gray);\
+        bottom.add(ratingLabel);\
+\
+        JLabel thoughtsLabel = \cf2 new \cf4 JLabel(\cf9 "      Thoughts: " \cf4 + dataThoughts);\
+        thoughtsLabel.setFont(text);\
+        thoughtsLabel.setForeground(Color.gray);\
+        JScrollPane pane = \cf2 new \cf4 JScrollPane(thoughtsLabel); \cf6 // Scroll pane to display all the thoughts.\
+        \cf4 bottom.add(pane);\
+\
+        frame.add(top);\
+        frame.add(bottom);\
+\
+        frame.setVisible(\cf2 true\cf4 );\
+    \}\
+    \cf2 public int \cf4 getPages() \cf6 // Getting total amount of pages.\
+    \cf4 \{\
+        \cf2 int \cf4 totalPages = \cf7 0\cf4 ;\
+        \cf2 try \cf4 \{\
+            FileReader fr = \cf2 new \cf4 FileReader(\cf9 "BookData.txt"\cf4 );\
+            BufferedReader br = \cf2 new \cf4 BufferedReader(fr);\
+\
+            String temp = br.readLine();\
+            \cf2 while \cf4 (temp != \cf2 null\cf4 ) \{\
+                String[] data = temp.split(\cf9 "\cb10 ,\cb3 "\cf4 );\
+                \cf2 int \cf4 pages = Integer.parseInt(data[\cf7 2\cf4 ]); \cf6 // Parsing from String to int in order to perform operations.\
+                \cf4 totalPages += pages;\
+\
+                temp = br.readLine(); \cf6 // Read the next line for the next iteration.\
+            \cf4 \}\
+\
+            fr.close();\
+            br.close();\
+        \}\
+        \cf2 catch \cf4 (IOException | NumberFormatException e)\
+        \{\
+            System.
+\f1\i \cf5 out
+\f0\i0 \cf4 .println(e);\
+            JOptionPane.
+\f1\i showMessageDialog
+\f0\i0 (\cf2 null\cf4 , \cf9 "Something went wrong. The program is going to end once you click the X"\cf4 );\
+            System.
+\f1\i exit
+\f0\i0 (\cf7 0\cf4 );\
+        \}\
+        \cf2 return \cf4 totalPages;\
+    \}\
+\
+    \cf2 private \cf4 JPanel \cf8 createBookPanel\cf4 (String title) \{ \cf6 // Create new panel for book when the Refresh Catalog button is pressed.\
+        \cf4 JPanel panel = \cf2 new \cf4 JPanel(); \cf6 // Panel for each book.\
+        \cf4 panel.setPreferredSize(\cf2 new \cf4 Dimension(\cf7 100\cf4 , \cf7 150\cf4 )); \cf6 // Size of book.\
+        \cf4 panel.setBorder(BorderFactory.
+\f1\i createLineBorder
+\f0\i0 (Color.
+\f1\i \cf5 BLACK
+\f0\i0 \cf4 )); \cf6 // Setting border to black in order to distinguish between books.\
+        \cf4 panel.setLayout(\cf2 new \cf4 BorderLayout());\
+\
+        JLabel titleLabel = \cf2 new \cf4 JLabel(\cf9 "<html><div style='transform: rotate(-90deg);'>" \cf4 + title + \cf9 "</div></html>"\cf4 ); \cf6 // This line allows the whole title to be seen.\
+        \cf4 titleLabel.setHorizontalAlignment(SwingConstants.
+\f1\i \cf5 CENTER
+\f0\i0 \cf4 );\
+        panel.add(titleLabel, BorderLayout.
+\f1\i \cf5 CENTER
+\f0\i0 \cf4 );\
+\
+        \cf2 return \cf4 panel;\
+    \}\
+\}\
+}

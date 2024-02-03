@@ -1,0 +1,98 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Oblique;}
+{\colortbl;\red255\green255\blue255;\red195\green123\blue90;\red23\green23\blue26;\red174\green176\blue183;
+\red185\green101\blue173;\red103\green107\blue114;\red71\green149\blue242;\red38\green157\blue169;\red89\green158\blue96;
+\red164\green160\blue78;}
+{\*\expandedcolortbl;;\csgenericrgb\c76471\c48235\c35294;\csgenericrgb\c9020\c9020\c10196;\csgenericrgb\c68235\c69020\c71765;
+\csgenericrgb\c72549\c39608\c67843;\csgenericrgb\c40392\c41961\c44706;\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c14902\c61569\c66275;\csgenericrgb\c34902\c61961\c37647;
+\csgenericrgb\c64314\c62745\c30588;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 import \cf4 javax.swing.*;\
+\cf2 import \cf4 java.awt.*;\
+\cf2 import \cf4 java.awt.event.*;\
+\
+\cf2 public class \cf4 Stars \{\
+    \cf2 private final \cf4 JLabel[] \cf5 starsLabel\cf4 ; \cf6 // Stars label.\
+    \cf2 private int \cf5 bookRating\cf4 ;\
+\
+    \cf2 public \cf7 Stars\cf4 () \{\
+        \cf5 starsLabel \cf4 = \cf2 new \cf4 JLabel[\cf8 5\cf4 ]; \cf6 // 5 elements in total.\
+        \cf2 for \cf4 (\cf2 int \cf4 i = \cf8 0\cf4 ; i < \cf8 5\cf4 ; i++) \{\
+            \cf5 starsLabel\cf4 [i] = \cf2 new \cf4 JLabel(\cf9 "\cf2 \\u2606\cf9 "\cf4 ); \cf6 // Unicode for an empty star.\
+            \cf2 int \cf4 rating = i + \cf8 1\cf4 ; \cf6 // Lowest rating is 1, not 0.\
+            \cf5 starsLabel\cf4 [i].setForeground(Color.
+\f1\i \cf5 GRAY
+\f0\i0 \cf4 ); \cf6 // Setting them to gray initially.\
+            \cf5 starsLabel\cf4 [i].setFont(\cf2 new \cf4 Font(\cf9 "Arial"\cf4 , Font.
+\f1\i \cf5 BOLD
+\f0\i0 \cf4 , \cf8 24\cf4 ));\
+            \cf5 starsLabel\cf4 [i].addMouseListener(\cf2 new \cf4 MouseAdapter() \{ \cf6 // Mouse adaptor to sense if the mouse is on the star.\
+                \cf10 @Override\
+                \cf2 public void \cf7 mouseClicked\cf4 (MouseEvent e) \{\
+                    setRating(\cf5 rating\cf4 ); \cf6 // If the mouse clicks a star.\
+                \cf4 \}\
+\
+                \cf10 @Override\
+                \cf2 public void \cf7 mouseEntered\cf4 (MouseEvent e) \{\
+                    setHoverRating(\cf5 rating\cf4 ); \cf6 // If the mouse hovers over a star.\
+                \cf4 \}\
+\
+                \cf10 @Override\
+                \cf2 public void \cf7 mouseExited\cf4 (MouseEvent e) \{\
+                    resetHoverRating(); \cf6 // If a mouse leaves the star area.\
+                \cf4 \}\
+            \});\
+        \}\
+    \}\
+\
+    \cf2 private void \cf7 setRating\cf4 (\cf2 int \cf4 stars) \{\
+        \cf5 bookRating \cf4 = stars;\
+        \cf2 for \cf4 (\cf2 int \cf4 i = \cf8 0\cf4 ; i < stars; i++) \{\
+            \cf5 starsLabel\cf4 [i].setForeground(Color.
+\f1\i \cf5 yellow
+\f0\i0 \cf4 ); \cf6 // Setting the star clicked and the elements before that to yellow.\
+        \cf4 \}\
+        \cf2 for \cf4 (\cf2 int \cf4 i = stars; i < \cf8 5\cf4 ; i++) \{\
+            \cf5 starsLabel\cf4 [i].setForeground(Color.
+\f1\i \cf5 gray
+\f0\i0 \cf4 ); \cf6 // Setting the rest to gray.\
+        \cf4 \}\
+    \}\
+    \cf2 private void \cf7 setHoverRating\cf4 (\cf2 int \cf4 hoverRating) \{\
+        \cf2 for \cf4 (\cf2 int \cf4 i = \cf8 0\cf4 ; i < hoverRating; i++) \{\
+            \cf5 starsLabel\cf4 [i].setForeground(Color.
+\f1\i \cf5 YELLOW
+\f0\i0 \cf4 ); \cf6 // Same logic as clicked.\
+        \cf4 \}\
+        \cf2 for \cf4 (\cf2 int \cf4 i = hoverRating; i < \cf8 5\cf4 ; i++) \{\
+            \cf5 starsLabel\cf4 [i].setForeground(Color.
+\f1\i \cf5 GRAY
+\f0\i0 \cf4 );\
+        \}\
+    \}\
+\
+    \cf2 private void \cf7 resetHoverRating\cf4 () \{\
+        \cf2 for \cf4 (\cf2 int \cf4 i = \cf8 0\cf4 ; i < \cf8 5\cf4 ; i++) \{ \cf6 // Setting all to gray.\
+            \cf5 starsLabel\cf4 [i].setForeground(i < \cf5 bookRating \cf4 ? Color.
+\f1\i \cf5 YELLOW 
+\f0\i0 \cf4 : Color.
+\f1\i \cf5 GRAY
+\f0\i0 \cf4 );\
+        \}\
+    \}\
+\
+    \cf2 public \cf4 JLabel[] \cf7 getStarsLabel\cf4 ()\
+    \{\
+        \cf2 return this\cf4 .\cf5 starsLabel\cf4 ; \cf6 // Get the label.\
+    \cf4 \}\
+\
+   \cf2 public int \cf7 getRating\cf4 () \cf6 // Get the rating.\
+    \cf4 \{\
+        \cf2 return \cf5 bookRating\cf4 ;\
+    \}\
+\}\
+\
+\
+}
